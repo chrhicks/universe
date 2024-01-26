@@ -22,19 +22,11 @@ export default function Home() {
           />
         </div>
         <div className="flex px-3 justify-between">
-          <div className="space-y-3">
-            <div className="flex space-x-2 justify-center items-center">
-              <p className="w-full">Quarks</p>
-              <Incremental type="quarks" />
-            </div>
-            <div className="flex space-x-2 justify-center items-center">
-              <p className="w-full">Protons</p>
-              <Incremental type="quarks" />
-            </div>
-            <div className="flex space-x-2 justify-center items-center">
-              <p className="w-full">Neutrons</p>
-              <Incremental type="quarks" />
-            </div>
+          <div className="space-y-5 w-1/4">
+            <Incremental label="Quarks" type="quarks" rate={0.1} />
+            <Incremental label="Electrons" type="electron" rate={0.2} />
+            <Incremental label="Protons" type="proton" rate={0.05} />
+            <Incremental label="Neutrons" type="neutron" rate={0.05} />
           </div>
           <UniverseThings />
         </div>

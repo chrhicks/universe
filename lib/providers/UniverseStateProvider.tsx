@@ -2,7 +2,7 @@
 
 import React, { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 
-export type IncrementalTypes = 'u-quark' | 'd-quark' | 'proton' | 'neutron'
+export type IncrementalTypes = 'u-quark' | 'd-quark' | 'proton' | 'neutron' | 'electron'
 
 interface Incremental {
   value: number
@@ -20,6 +20,7 @@ export function UniverseStateProvider({ children }: { children: React.ReactNode 
   const [dQuarks, setDQuarks] = useState<number>(0)
   const [protons, setProtons] = useState<number>(0)
   const [neutrons, setNeutrons] = useState<number>(0)
+  const [electrons, setElectrons] = useState<number>(0)
 
   return (
     <UniverseStateContext.Provider
@@ -41,6 +42,10 @@ export function UniverseStateProvider({ children }: { children: React.ReactNode 
             value: neutrons,
             setValue: setNeutrons
           },
+          'electron': {
+            value: electrons,
+            setValue: setElectrons
+          }
         }
       }}
     >
