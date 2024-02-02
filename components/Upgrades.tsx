@@ -1,5 +1,6 @@
 'use client'
 
+import { configuration } from "@/lib/config";
 import { useUniverseStateCtx } from "@/lib/providers/UniverseStateProvider";
 import { ChevronDoubleUpIcon } from "@heroicons/react/24/outline";
 
@@ -22,13 +23,15 @@ function UpgradeTile({ name, description, cost }: { name: string, description: s
 }
 
 export default function Upgrades() {
+  const { upgrades: { items } } = configuration
   const { universeState: { experience } } = useUniverseStateCtx()
   return (
     <div className="rounded-md bg-slate-800 p-2 space-y-4">
       <p>Upgrades</p>
       <div>Points: {experience.level}</div>
-      <UpgradeTile cost={5} name="Quark Automation I" description="Automatically creates up / down quarks" />
-      <UpgradeTile cost={5} name="Atomic Automation I" description="Automatically creates atomic particles (elections, protons, neutrons" />
+      {items.map(upgrade =>
+        <UpgradeTile cost={upgrade.cost} name={upgrade.name} description={upgrade.description} key={upgrade.name} />)
+      }
     </div>
   )
 }

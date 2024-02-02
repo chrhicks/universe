@@ -28,10 +28,61 @@ export interface ExperienceConfig {
   growthFactor: number
 }
 
+export interface UpgradeConfig {
+  name: string
+  description: string
+  cost: number
+}
+
+export interface UpgradesConfig {
+  items: UpgradeConfig[]
+}
+
 export interface Configuration {
   darkEnergy: DarkEnergyConfig
   experience: ExperienceConfig
+  upgrades: UpgradesConfig
   things: IncrementalConfig
+}
+
+const things: IncrementalConfig = {
+  upQuark: {
+    rate: 10,
+    progress: 0,
+    xpAmount: 50
+  },
+  downQuark: {
+    rate: 10,
+    progress: 0,
+    xpAmount: 50
+  },
+  proton: {
+    rate: 5,
+    progress: 0,
+    xpAmount: 65
+  },
+  neutron: {
+    rate: 5,
+    progress: 0,
+    xpAmount: 65
+  },
+  electron: {
+    rate: 15,
+    progress: 0,
+    xpAmount: 25
+  }
+}
+
+const upgrades: UpgradesConfig = {
+  items: [{
+    name: 'Sub-atomic Automation',
+    description: 'Automatically creates up / down quarks',
+    cost: 4
+  }, {
+    name: 'Atomic Automation',
+    description: 'Automatically creates atomic particles (elections, protons, neutrons)',
+    cost: 5
+  }]
 }
 
 export const configuration: Configuration = {
@@ -43,31 +94,6 @@ export const configuration: Configuration = {
     fn: 'exponential',
     growthFactor: 1.5
   },
-  things: {
-    upQuark: {
-      rate: 10,
-      progress: 0,
-      xpAmount: 50
-    },
-    downQuark: {
-      rate: 10,
-      progress: 0,
-      xpAmount: 50
-    },
-    proton: {
-      rate: 5,
-      progress: 0,
-      xpAmount: 65
-    },
-    neutron: {
-      rate: 5,
-      progress: 0,
-      xpAmount: 65
-    },
-    electron: {
-      rate: 15,
-      progress: 0,
-      xpAmount: 25
-    }
-  }
+  upgrades,
+  things
 }
