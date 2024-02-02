@@ -1,38 +1,9 @@
 'use client'
 
-import React, { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import UniverseStateHelper from "../UniverseStateHelper";
 import { configuration } from "../config";
-
-export type IncrementalTypes = 'upQuark' | 'downQuark' | 'proton' | 'neutron' | 'electron'
-
-export interface ThingValue {
-  thingType: IncrementalTypes
-  total: number
-  progress: number
-  automated: boolean
-}
-
-export interface UniverseState {
-  darkEnergy: number
-  experience: {
-    amount: number,
-    nextLevel: number
-    level: number
-  }
-  things: {
-    upQuark: ThingValue
-    downQuark: ThingValue
-    proton: ThingValue
-    neutron: ThingValue
-    electron: ThingValue
-  }
-}
-
-export interface StateWrapper {
-  universeState: UniverseState
-  setUniverseState: Dispatch<SetStateAction<UniverseState>>
-}
+import { StateWrapper, UniverseState } from "../types";
 
 const UniverseStateCtx = createContext<StateWrapper>(undefined!)
 
@@ -43,6 +14,7 @@ const defaultUniverseState: UniverseState = {
     nextLevel: configuration.experience.initialRequirement,
     level: 1
   },
+  appliedUpgrades: [],
   things: {
     upQuark: {
       thingType: 'upQuark',

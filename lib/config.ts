@@ -1,49 +1,4 @@
-
-export interface ThingConfig {
-  // The rate at which to increase progress
-  rate: number // Float - Fixed(3)
-
-  // % based value - 0-100
-  progress: number // Integer
-
-  // How much to increment XP progress by
-  xpAmount: number // Integer
-}
-
-export interface IncrementalConfig {
-  upQuark: ThingConfig,
-  downQuark: ThingConfig,
-  proton: ThingConfig,
-  neutron: ThingConfig,
-  electron: ThingConfig
-}
-
-export interface DarkEnergyConfig {
-  maxAmount: number
-}
-
-export interface ExperienceConfig {
-  initialRequirement: number
-  fn: 'linear' | 'exponential' | 'variable',
-  growthFactor: number
-}
-
-export interface UpgradeConfig {
-  name: string
-  description: string
-  cost: number
-}
-
-export interface UpgradesConfig {
-  items: UpgradeConfig[]
-}
-
-export interface Configuration {
-  darkEnergy: DarkEnergyConfig
-  experience: ExperienceConfig
-  upgrades: UpgradesConfig
-  things: IncrementalConfig
-}
+import { Configuration, IncrementalConfig, UpgradesConfig } from "./types"
 
 const things: IncrementalConfig = {
   upQuark: {
@@ -75,10 +30,12 @@ const things: IncrementalConfig = {
 
 const upgrades: UpgradesConfig = {
   items: [{
+    id: 'sub-atomic-automation',
     name: 'Sub-atomic Automation',
     description: 'Automatically creates up / down quarks',
     cost: 4
   }, {
+    id: 'atomic-automation',
     name: 'Atomic Automation',
     description: 'Automatically creates atomic particles (elections, protons, neutrons)',
     cost: 5

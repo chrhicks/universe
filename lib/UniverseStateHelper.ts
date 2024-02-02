@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-import { IncrementalTypes, StateWrapper, ThingValue, UniverseState } from "./providers/UniverseStateProvider"
-import { ThingConfig, configuration } from "./config"
+import { configuration } from "./config"
+import { IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState } from "./types"
 
 export default class UniverseStateHelper {
   universeState: UniverseState
@@ -117,6 +117,22 @@ export default class UniverseStateHelper {
         [type]: newThingValue
       },
       experience: newExperience
+    }
+  }
+
+  // TODO: save applied modifiers to state
+  applyUpgrade(id: string) {
+    const { appliedUpgrades } = this.universeState
+
+    const isExisting = appliedUpgrades.find(u => u.id === id)
+
+    if (isExisting) return this.universeState
+
+    const newAppliedUpgrades = [...appliedUpgrades, { id }]
+
+    return {
+      ...this.universeState,
+      appliedUpgrades: newAppliedUpgrades
     }
   }
 }
