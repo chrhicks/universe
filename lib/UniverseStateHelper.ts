@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import { StateWrapper, ThingValue, UniverseState } from "./providers/UniverseStateProvider"
+import { IncrementalTypes, StateWrapper, ThingValue, UniverseState } from "./providers/UniverseStateProvider"
 import { ThingConfig, configuration } from "./config"
 
 export default class UniverseStateHelper {
@@ -30,9 +30,9 @@ export default class UniverseStateHelper {
       }
 
       return {
+        ...thingValue,
         progress: newProgress >= 100 ? 0 : newProgress,
-        total: newTotal,
-        automated
+        total: newTotal
       }
     }
 
@@ -76,5 +76,47 @@ export default class UniverseStateHelper {
     }
 
     return newState
+  }
+
+  incrementThing(type: IncrementalTypes): ThingValue {
+    const config = configuration.things[type]
+    const thingValue = this.universeState.things[type]
+    const { rate } = config
+    const { total } = thingValue
+
+    return {
+      ...thingValue,
+      total: total + 1
+    }
+  }
+
+  incrementXp(type: IncrementalTypes) {
+    const { xpAmount } = configuration.things[type]
+    const { amount, nextLevel, level } = this.universeState.experience
+    const nextAmount = amount + xpAmount
+    const isNewLevel = nextAmount >= nextLevel
+    const newNextLevel = isNewLevel ? level + 1 : level
+
+    return {
+      amount: isNewLevel ? 0 : nextAmount,
+      nextLevel: isNewLevel
+        ? (nextAmount * Math.pow(configuration.experience.growthFactor, newNextLevel -1 ))
+        : nextLevel,
+      level: newNextLevel
+    }
+  }
+
+  increment(type: IncrementalTypes): UniverseState {
+    const newThingValue = this.incrementThing(type)
+    const newExperience = this.incrementXp(type)
+
+    return {
+      ...this.universeState,
+      things: {
+        ...this.universeState.things,
+        [type]: newThingValue
+      },
+      experience: newExperience
+    }
   }
 }

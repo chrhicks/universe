@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, createContext, useContext, useEffect, 
 import UniverseStateHelper from "../UniverseStateHelper";
 import { configuration } from "../config";
 
-export type IncrementalTypes = 'u-quark' | 'd-quark' | 'proton' | 'neutron' | 'electron'
+export type IncrementalTypes = 'upQuark' | 'downQuark' | 'proton' | 'neutron' | 'electron'
 
 interface Incremental {
   value: number
@@ -20,6 +20,7 @@ export interface UniverseStateProps {
 }
 
 export interface ThingValue {
+  thingType: IncrementalTypes
   total: number
   progress: number
   automated: boolean
@@ -49,7 +50,7 @@ export interface StateWrapper {
 const UniverseStateContext = createContext<UniverseStateProps>(undefined!)
 const UniverseStateCtx = createContext<StateWrapper>(undefined!)
 
-const defaultUniverseState = {
+const defaultUniverseState: UniverseState = {
   darkEnergy: 0,
   experience: {
     amount: 1,
@@ -58,26 +59,31 @@ const defaultUniverseState = {
   },
   things: {
     upQuark: {
+      thingType: 'upQuark',
       total: 0,
       progress: 0,
       automated: false
     },
     downQuark: {
+      thingType: 'downQuark',
       total: 0,
       progress: 0,
       automated: false
     },
     proton: {
+      thingType: 'proton',
       total: 0,
       progress: 0,
       automated: false
     },
     neutron: {
+      thingType: 'neutron',
       total: 0,
       progress: 0,
       automated: false
     },
     electron: {
+      thingType: 'electron',
       total: 0,
       progress: 0,
       automated: false
@@ -113,11 +119,11 @@ export function UniverseStateProvider({ children }: { children: React.ReactNode 
       <UniverseStateContext.Provider
         value={{
           incrementals: {
-            'u-quark': {
+            'upQuark': {
               value: uQuarks,
               setValue: setUQuarks
             },
-            'd-quark': {
+            'downQuark': {
               value: dQuarks,
               setValue: setDQuarks
             },

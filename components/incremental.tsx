@@ -1,10 +1,11 @@
 'use client'
 
 import {
-  ThingValue,
+  ThingValue, useUniverseStateCtx,
 } from "@/lib/providers/UniverseStateProvider";
 import { Progress } from "@nextui-org/react";
 import { ArrowUpIcon, PlusIcon } from "@heroicons/react/24/outline";
+import UniverseStateHelper from "@/lib/UniverseStateHelper";
 
 interface IncrementalProps {
   label: string
@@ -25,11 +26,19 @@ export default function Incremental(props: IncrementalProps) {
   const {
     label,
     thing: {
+      thingType,
       total,
-      progress,
-      automated
+      progress
     }
   } = props
+  const state = useUniverseStateCtx()
+
+  function increment() {
+    const helper = new UniverseStateHelper(state)
+    const newUniverseState = helper.increment(thingType)
+
+    state.setUniverseState(newUniverseState)
+  }
 
   return (
     <div className="rounded-md bg-slate-800 p-2">
@@ -54,7 +63,7 @@ export default function Incremental(props: IncrementalProps) {
           </div>
         </button>
         <button className="p-1 rounded bg-cyan-900">
-          <PlusIcon className="w-5 h-5 text-slate-900 "  />
+          <PlusIcon className="w-5 h-5 text-slate-900" onClick={increment}/>
         </button>
       </div>
     </div>

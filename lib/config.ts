@@ -1,6 +1,6 @@
 
 export interface ThingConfig {
-  // The rate at which
+  // The rate at which to increase progress
   rate: number // Float - Fixed(3)
 
   // % based value - 0-100
