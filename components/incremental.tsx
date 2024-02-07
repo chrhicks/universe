@@ -1,11 +1,12 @@
 'use client'
 
 import {
-  ThingValue, useUniverseStateCtx,
+   useUniverseStateCtx
 } from "@/lib/providers/UniverseStateProvider";
 import { Progress } from "@nextui-org/react";
 import { ArrowUpIcon, PlusIcon } from "@heroicons/react/24/outline";
 import UniverseStateHelper from "@/lib/UniverseStateHelper";
+import { ThingValue } from "@/lib/types";
 
 interface IncrementalProps {
   label: string

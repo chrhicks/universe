@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 
 export type IncrementalTypes = 'upQuark' | 'downQuark' | 'proton' | 'neutron' | 'electron'
+export type UpgradeId = 'sub-atomic-automation' | 'atomic-automation'
 
 export interface ThingValue {
   thingType: IncrementalTypes
@@ -10,7 +11,7 @@ export interface ThingValue {
 }
 
 export interface AppliedUpgrade {
-  id: string
+  id: UpgradeId
 }
 
 export interface UniverseState {
@@ -65,7 +66,7 @@ export interface ExperienceConfig {
 }
 
 export interface UpgradeConfig {
-  id: string
+  id: UpgradeId
   name: string
   description: string
   cost: number

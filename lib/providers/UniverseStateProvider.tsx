@@ -53,13 +53,15 @@ export function UniverseStateProvider({ children }: { children: React.ReactNode 
   const [universeState, setUniverseState] = useState<UniverseState>(defaultUniverseState)
 
   useEffect(() => {
-    const tickId = setTimeout(() => {
+    const fn = () => {
       const helper = new UniverseStateHelper({ universeState, setUniverseState })
       setUniverseState(helper.performTick())
-    }, 500)
+    }
+
+    const tickId = setTimeout(fn, 500)
 
     return () => clearTimeout(tickId)
-  }, [universeState])
+  })
 
   return (
     <UniverseStateCtx.Provider value={{

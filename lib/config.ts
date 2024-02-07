@@ -33,7 +33,7 @@ const upgrades: UpgradesConfig = {
     id: 'sub-atomic-automation',
     name: 'Sub-atomic Automation',
     description: 'Automatically creates up / down quarks',
-    cost: 4
+    cost: 3
   }, {
     id: 'atomic-automation',
     name: 'Atomic Automation',

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { configuration } from "./config"
-import { IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState } from "./types"
+import { AppliedUpgrade, IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState, UpgradeId } from "./types"
 
 export default class UniverseStateHelper {
   universeState: UniverseState
@@ -11,14 +11,45 @@ export default class UniverseStateHelper {
     this.setUniverseState = state.setUniverseState
   }
 
-  performTick(): UniverseState {
+  performTick(universeState?: UniverseState): UniverseState {
     let xpIncrement = 0
+    const { appliedUpgrades } = this.universeState
+
+    const upgradeModifications = (thingValue: ThingValue) => {
+      let mods = {
+        automated: false
+      }
+
+      const subAtomicAutomation: IncrementalTypes[] = ['upQuark', 'downQuark', 'electron']
+      const atomicAutomation: IncrementalTypes[] = ['neutron', 'proton']
+
+      if (subAtomicAutomation.includes(thingValue.thingType)
+            && appliedUpgrades.find(au => au.id === 'sub-atomic-automation')) {
+        mods = {
+          ...mods,
+          automated: true
+        }
+      }
+
+      if (atomicAutomation.includes(thingValue.thingType)
+            && appliedUpgrades.find(au => au.id === 'atomic-automation')) {
+
+        mods = {
+          ...mods,
+          automated: true
+        }
+      }
+
+      return mods
+    }
 
     const increment = (config: ThingConfig, thingValue: ThingValue): ThingValue => {
       const { xpAmount, rate } = config
-      const { total, progress, automated } = thingValue
+      const { total, progress } = thingValue
 
-      if (!automated) {
+      const mods = upgradeModifications(thingValue)
+
+      if (!mods.automated) {
         return thingValue
       }
 
@@ -32,7 +63,8 @@ export default class UniverseStateHelper {
       return {
         ...thingValue,
         progress: newProgress >= 100 ? 0 : newProgress,
-        total: newTotal
+        total: newTotal,
+        automated: mods.automated
       }
     }
 
@@ -69,7 +101,7 @@ export default class UniverseStateHelper {
     const experience = incrementXp()
 
     const newState: UniverseState = {
-      ...this.universeState,
+      ...(universeState || this.universeState),
       things,
       darkEnergy: this.universeState.darkEnergy + xpIncrement,
       experience
@@ -78,15 +110,17 @@ export default class UniverseStateHelper {
     return newState
   }
 
-  incrementThing(type: IncrementalTypes): ThingValue {
+  incrementThing(type: IncrementalTypes, appliedUpgrades: AppliedUpgrade[]): ThingValue {
     const config = configuration.things[type]
     const thingValue = this.universeState.things[type]
     const { rate } = config
-    const { total } = thingValue
+    const { total, progress } = thingValue
+    const newProgress = progress + rate
 
     return {
       ...thingValue,
-      total: total + 1
+      total: total + 1,
+      progress:  newProgress >= 100 ? 0 : newProgress
     }
   }
 
@@ -100,15 +134,18 @@ export default class UniverseStateHelper {
     return {
       amount: isNewLevel ? 0 : nextAmount,
       nextLevel: isNewLevel
-        ? (nextAmount * Math.pow(configuration.experience.growthFactor, newNextLevel -1 ))
+        // ? (nextAmount * Math.pow(configuration.experience.growthFactor, newNextLevel -1 ))
+        ? ((nextAmount + 1) * Math.log(nextLevel))
         : nextLevel,
       level: newNextLevel
     }
   }
 
   increment(type: IncrementalTypes): UniverseState {
-    const newThingValue = this.incrementThing(type)
-    const newExperience = this.incrementXp(type)
+    const { appliedUpgrades, experience } = this.universeState
+    const newThingValue = this.incrementThing(type, appliedUpgrades)
+
+    const newExperience = experience.level > 0 && newThingValue.progress === 0 ? this.incrementXp(type) : experience
 
     return {
       ...this.universeState,
@@ -121,8 +158,12 @@ export default class UniverseStateHelper {
   }
 
   // TODO: save applied modifiers to state
-  applyUpgrade(id: string) {
-    const { appliedUpgrades } = this.universeState
+  // -- maybe. Will it just sort itself on the next Tick?
+  applyUpgrade(id: UpgradeId): UniverseState {
+    const { appliedUpgrades, experience: { level } } = this.universeState
+    const upgrade = configuration.upgrades.items.find(au => au.id === id)
+
+    if (!upgrade || level < upgrade.cost) return this.universeState
 
     const isExisting = appliedUpgrades.find(u => u.id === id)
 
@@ -130,9 +171,15 @@ export default class UniverseStateHelper {
 
     const newAppliedUpgrades = [...appliedUpgrades, { id }]
 
-    return {
+    const ehh = {
       ...this.universeState,
+      experience: {
+        ...this.universeState.experience,
+        level: (level - upgrade.cost)
+      },
       appliedUpgrades: newAppliedUpgrades
     }
+
+    return ehh
   }
 }
