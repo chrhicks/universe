@@ -20,30 +20,50 @@ const defaultUniverseState: UniverseState = {
       thingType: 'upQuark',
       total: 0,
       progress: 0,
+      totalPerProgressComplete: 1,
+      pointsForNext: 1,
+      rate: configuration.things['upQuark'].rate,
+      xpAmount: configuration.things['upQuark'].xpAmount,
       automated: false
     },
     downQuark: {
       thingType: 'downQuark',
       total: 0,
       progress: 0,
+      totalPerProgressComplete: 1,
+      pointsForNext: 1,
+      rate: configuration.things['downQuark'].rate,
+      xpAmount: configuration.things['downQuark'].xpAmount,
       automated: false
     },
     proton: {
       thingType: 'proton',
       total: 0,
       progress: 0,
+      totalPerProgressComplete: 1,
+      pointsForNext: 1,
+      rate: configuration.things['proton'].rate,
+      xpAmount: configuration.things['proton'].xpAmount,
       automated: false
     },
     neutron: {
       thingType: 'neutron',
       total: 0,
       progress: 0,
+      totalPerProgressComplete: 1,
+      pointsForNext: 1,
+      rate: configuration.things['neutron'].rate,
+      xpAmount: configuration.things['neutron'].xpAmount,
       automated: false
     },
     electron: {
       thingType: 'electron',
       total: 0,
       progress: 0,
+      totalPerProgressComplete: 1,
+      pointsForNext: 1,
+      rate: configuration.things['electron'].rate,
+      xpAmount: configuration.things['electron'].xpAmount,
       automated: false
     }
   }
@@ -60,15 +80,6 @@ export function UniverseStateProvider({ children }: { children: React.ReactNode 
     }
 
     const tickId = setTimeout(fn, configuration.tickSpeed)
-
-    // const promise = new Promise((resolve) => {
-    //   let amount = 250
-    //   let level = 2
-    //   const helper = new UniverseStateHelper({ universeState, setUniverseState })
-    //   for (let i = 0; i < 15; i++) {
-    //     console.log(`amount[${amount}], nextLevel[${helper.xpGrowthFn(amount, level)}]`)
-    //   }
-    // })
 
     return () => clearTimeout(tickId)
   })

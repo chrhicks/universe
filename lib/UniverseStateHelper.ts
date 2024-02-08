@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { configuration } from './config'
-import { IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState, UpgradeId } from './types'
+import { IncrementalTypes, StateWrapper, ThingValue, UniverseState, UpgradeId } from './types'
+import { toInt } from './utils'
 
 export default class UniverseStateHelper {
   universeState: UniverseState
@@ -43,9 +44,8 @@ export default class UniverseStateHelper {
       return mods
     }
 
-    const increment = (config: ThingConfig, thingValue: ThingValue): ThingValue => {
-      const { xpAmount, rate } = config
-      const { total, progress } = thingValue
+    const increment = (thingValue: ThingValue): ThingValue => {
+      const { total, progress, rate, totalPerProgressComplete, xpAmount } = thingValue
 
       const mods = upgradeModifications(thingValue)
 
@@ -54,7 +54,7 @@ export default class UniverseStateHelper {
       }
 
       const newProgress = progress + rate
-      const newTotal = newProgress >= 100 ? total + 1 : total
+      const newTotal = newProgress >= 100 ? total + toInt(totalPerProgressComplete) : total
 
       if (newProgress >= 100) {
         xpIncrement += xpAmount
@@ -72,7 +72,7 @@ export default class UniverseStateHelper {
       const { amount, nextLevel, level } = this.universeState.experience
       const nextAmount = amount + xpIncrement
       const isNewLevel = nextAmount >= nextLevel
-      const newNextLevel = isNewLevel ? level + 1 : level
+      const newNextLevel = isNewLevel ? Math.max(level, 0) + 1 : level
 
       return {
         amount: isNewLevel ? 0 : nextAmount,
@@ -90,11 +90,11 @@ export default class UniverseStateHelper {
     // 1.
     const things = {
       ...this.universeState.things,
-      upQuark: increment(configuration.things.upQuark, this.universeState.things.upQuark),
-      downQuark: increment(configuration.things.downQuark, this.universeState.things.downQuark),
-      proton: increment(configuration.things.proton, this.universeState.things.proton),
-      neutron: increment(configuration.things.neutron, this.universeState.things.neutron),
-      electron: increment(configuration.things.electron, this.universeState.things.electron)
+      upQuark: increment(this.universeState.things.upQuark),
+      downQuark: increment(this.universeState.things.downQuark),
+      proton: increment(this.universeState.things.proton),
+      neutron: increment(this.universeState.things.neutron),
+      electron: increment(this.universeState.things.electron)
     }
 
     // 2.
@@ -142,7 +142,7 @@ export default class UniverseStateHelper {
     const { amount, nextLevel, level } = this.universeState.experience
     const nextAmount = amount + xpAmount
     const isNewLevel = nextAmount >= nextLevel
-    const newNextLevel = isNewLevel ? level + 1 : level
+    const newNextLevel = isNewLevel ? Math.max(level, 0) + 1 : level
 
     return {
       amount: isNewLevel ? 0 : nextAmount,
@@ -173,8 +173,6 @@ export default class UniverseStateHelper {
     }
   }
 
-  // TODO: save applied modifiers to state
-  // -- maybe. Will it just sort itself on the next Tick?
   applyUpgrade(id: UpgradeId): UniverseState {
     const { appliedUpgrades, experience: { level } } = this.universeState
     const upgrade = configuration.upgrades.items.find(au => au.id === id)
@@ -194,6 +192,27 @@ export default class UniverseStateHelper {
         level: (level - upgrade.cost)
       },
       appliedUpgrades: newAppliedUpgrades
+    }
+  }
+
+  applyThingUpgrade(thingValue: ThingValue): UniverseState {
+    const { pointsForNext, rate, totalPerProgressComplete, xpAmount } = thingValue
+    return {
+      ...this.universeState,
+      experience: {
+        ...this.universeState.experience,
+        level: this.universeState.experience.level - pointsForNext
+      },
+      things: {
+        ...this.universeState.things,
+        [thingValue.thingType]: {
+          ...thingValue,
+          pointsForNext: pointsForNext + 1,
+          rate: (rate * 1.05),
+          totalPerProgressComplete: (totalPerProgressComplete * 1.1),
+          xpAmount: xpAmount + this.xpGrowthFn(xpAmount, pointsForNext)
+        }
+      }
     }
   }
 }

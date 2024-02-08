@@ -6,7 +6,11 @@ export type UpgradeId = 'sub-atomic-automation' | 'atomic-automation'
 export interface ThingValue {
   thingType: IncrementalTypes
   total: number
+  totalPerProgressComplete: number
   progress: number
+  pointsForNext: number
+  rate: number
+  xpAmount: number
   automated: boolean
 }
 

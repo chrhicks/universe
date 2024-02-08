@@ -1,6 +1,7 @@
 'use client'
 
 import { useUniverseStateCtx } from '@/lib/providers/UniverseStateProvider'
+import { toInt } from '@/lib/utils'
 import { Progress } from '@nextui-org/react'
 
 export default function Experience() {
@@ -22,7 +23,7 @@ export default function Experience() {
       showValueLabel={true}
       valueLabel={
         <div>
-          {experience.amount} / {parseInt(experience.nextLevel.toFixed(0))}
+          {toInt(experience.amount)} / {toInt(experience.nextLevel)}
         </div>
       }
     />

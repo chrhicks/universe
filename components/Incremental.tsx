@@ -7,6 +7,7 @@ import { Progress } from '@nextui-org/react'
 import { ArrowUpIcon, PlusIcon } from '@heroicons/react/24/outline'
 import UniverseStateHelper from '@/lib/UniverseStateHelper'
 import { ThingValue } from '@/lib/types'
+import { toFixedFloat } from '@/lib/utils'
 
 interface IncrementalProps {
   label: string
@@ -29,16 +30,25 @@ export default function Incremental(props: IncrementalProps) {
     thing: {
       thingType,
       total,
-      progress
+      progress,
+      pointsForNext,
+      totalPerProgressComplete,
+      xpAmount
     }
   } = props
   const state = useUniverseStateCtx()
+  const { experience: { level } } = state.universeState
 
   function increment() {
     const helper = new UniverseStateHelper(state)
     const newUniverseState = helper.increment(thingType)
 
     state.setUniverseState(newUniverseState)
+  }
+
+  function upgradeThing() {
+    const helper = new UniverseStateHelper(state)
+    state.setUniverseState(helper.applyThingUpgrade(props.thing))
   }
 
   return (
@@ -54,16 +64,24 @@ export default function Incremental(props: IncrementalProps) {
           disableAnimation
         />
       </div>
-      <div className="flex justify-between items-center">
-        <button className="bg-yellow-500 p-1 rounded flex justify-center items-center">
+      <div className="flex space-x-2 items-center">
+        <button disabled={pointsForNext > level } className="bg-yellow-500 p-1 rounded flex justify-center items-center" onClick={upgradeThing}>
           <div className="px-1 text-tiny font-semibold flex items-center justify-center bg-yellow-700 rounded-lg">
             <div className="w-2 h-2 mr-2 bg-gray-400 rounded-full"></div>
-            1
+            { pointsForNext }
           </div>
           <div>
             <ArrowUpIcon className="w-5 h-5 text-green-900" />
           </div>
         </button>
+        <div className='flex flex-1 space-x-4 text-xs'>
+          <div>
+            rate: {toFixedFloat(totalPerProgressComplete)}
+          </div>
+          <div>
+            XP: {toFixedFloat(xpAmount)}
+          </div>
+        </div>
         <button className="p-1 rounded bg-cyan-900">
           <PlusIcon className="w-5 h-5 text-slate-900" onClick={increment}/>
         </button>

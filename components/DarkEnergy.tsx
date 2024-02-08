@@ -3,10 +3,11 @@
 import { useUniverseStateCtx } from '@/lib/providers/UniverseStateProvider'
 import { Progress } from '@nextui-org/react'
 import { configuration } from '@/lib/config'
+import { toInt } from '@/lib/utils'
 
 export default function DarkEnergy() {
   const { universeState: { darkEnergy } } = useUniverseStateCtx()
-  const progress = parseInt(((darkEnergy / configuration.darkEnergy.maxAmount) * 100).toFixed())
+  const progress = toInt(((darkEnergy / configuration.darkEnergy.maxAmount) * 100))
 
   return (
     <Progress
@@ -22,7 +23,7 @@ export default function DarkEnergy() {
       showValueLabel={true}
       valueLabel={
         <div>
-          {darkEnergy} / {configuration.darkEnergy.maxAmount}
+          {toInt(darkEnergy)} / {configuration.darkEnergy.maxAmount}
         </div>
       }
     />

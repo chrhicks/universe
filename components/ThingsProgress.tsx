@@ -1,7 +1,7 @@
 'use client'
 
 import { useUniverseStateCtx } from '@/lib/providers/UniverseStateProvider'
-import Incremental from './incremental'
+import Incremental from './Incremental'
 
 export default function ThingsProgress() {
   const { universeState: { things: {

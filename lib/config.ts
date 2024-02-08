@@ -43,7 +43,7 @@ const upgrades: UpgradesConfig = {
 }
 
 export const configuration: Configuration = {
-  tickSpeed: 50,
+  tickSpeed: 250,
   darkEnergy: {
     maxAmount: 850000
   },
