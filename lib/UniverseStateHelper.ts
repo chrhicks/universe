@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import { configuration } from './config'
-import { AppliedUpgrade, IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState, UpgradeId } from './types'
+import { IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState, UpgradeId } from './types'
 
 export default class UniverseStateHelper {
   universeState: UniverseState
@@ -111,17 +111,19 @@ export default class UniverseStateHelper {
   }
 
   xpGrowthFn(amount: number, level: number): number {
-    const { expGrowthFactor, logGrowthFactor, growthType } = configuration.experience
-    console.log(`growthType: ${growthType}`)
+    const { expGrowthFactor, growthType } = configuration.experience
+
     switch (growthType) {
       case 'exponential':
-        return (amount * Math.pow(configuration.experience.expGrowthFactor, level -1 ))
+        return (amount * Math.pow(expGrowthFactor, level -1 ))
+      case 'logarithmic':
+        return ((amount) * Math.log2(level))
       default:
         throw new Error(`Unhandled experience growthType [${growthType}]`)
     }
   }
 
-  incrementThing(type: IncrementalTypes, appliedUpgrades: AppliedUpgrade[]): ThingValue {
+  incrementThing(type: IncrementalTypes): ThingValue {
     const config = configuration.things[type]
     const thingValue = this.universeState.things[type]
     const { rate } = config
@@ -145,8 +147,6 @@ export default class UniverseStateHelper {
     return {
       amount: isNewLevel ? 0 : nextAmount,
       nextLevel: isNewLevel
-        // ? (nextAmount * Math.pow(configuration.experience.growthFactor, newNextLevel -1 ))
-        // ? ((nextAmount + 1) * Math.log(nextLevel))
         ? this.xpGrowthFn(nextAmount, newNextLevel)
         : nextLevel,
       level: newNextLevel
@@ -154,9 +154,9 @@ export default class UniverseStateHelper {
   }
 
   increment(type: IncrementalTypes): UniverseState {
-    const { appliedUpgrades, experience } = this.universeState
+    const { experience } = this.universeState
     const { xpAmount } = configuration.things[type]
-    const newThingValue = this.incrementThing(type, appliedUpgrades)
+    const newThingValue = this.incrementThing(type)
     const newExperience =
       experience.level > 0
         && newThingValue.progress === 0

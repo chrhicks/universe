@@ -14,12 +14,12 @@ const things: IncrementalConfig = {
   proton: {
     rate: 5,
     progress: 0,
-    xpAmount: 65
+    xpAmount: 125
   },
   neutron: {
     rate: 5,
     progress: 0,
-    xpAmount: 65
+    xpAmount: 125
   },
   electron: {
     rate: 15,
@@ -43,6 +43,7 @@ const upgrades: UpgradesConfig = {
 }
 
 export const configuration: Configuration = {
+  tickSpeed: 50,
   darkEnergy: {
     maxAmount: 850000
   },
@@ -50,7 +51,7 @@ export const configuration: Configuration = {
     initialRequirement: 250,
     growthType: 'logarithmic',
     expGrowthFactor: 1.5,
-    logGrowthFactor: 0.05
+    logGrowthFactor: 1
   },
   upgrades,
   things

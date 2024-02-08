@@ -3,6 +3,8 @@
   "rules": {
     "comma-dangle": ["error", "never"],
     "semi": ["warn", "never"],
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    "no-unused-expressions": "warn",
+    "no-unused-vars": "error"
   }
 }

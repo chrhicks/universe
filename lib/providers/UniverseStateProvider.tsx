@@ -14,7 +14,7 @@ const defaultUniverseState: UniverseState = {
     nextLevel: configuration.experience.initialRequirement,
     level: 1
   },
-  appliedUpgrades: [],
+  appliedUpgrades: [{ id: 'sub-atomic-automation' }],
   things: {
     upQuark: {
       thingType: 'upQuark',
@@ -55,10 +55,20 @@ export function UniverseStateProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     const fn = () => {
       const helper = new UniverseStateHelper({ universeState, setUniverseState })
-      setUniverseState(helper.performTick())
+      const newState = helper.performTick()
+      setUniverseState(newState)
     }
 
-    const tickId = setTimeout(fn, 500)
+    const tickId = setTimeout(fn, configuration.tickSpeed)
+
+    // const promise = new Promise((resolve) => {
+    //   let amount = 250
+    //   let level = 2
+    //   const helper = new UniverseStateHelper({ universeState, setUniverseState })
+    //   for (let i = 0; i < 15; i++) {
+    //     console.log(`amount[${amount}], nextLevel[${helper.xpGrowthFn(amount, level)}]`)
+    //   }
+    // })
 
     return () => clearTimeout(tickId)
   })

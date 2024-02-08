@@ -78,6 +78,7 @@ export interface UpgradesConfig {
 }
 
 export interface Configuration {
+  tickSpeed: number
   darkEnergy: DarkEnergyConfig
   experience: ExperienceConfig
   upgrades: UpgradesConfig

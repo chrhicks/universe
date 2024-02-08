@@ -20,6 +20,11 @@ export default function Experience() {
       label="XP"
       value={xpPercent}
       showValueLabel={true}
+      valueLabel={
+        <div>
+          {experience.amount} / {parseInt(experience.nextLevel.toFixed(0))}
+        </div>
+      }
     />
   )
 }

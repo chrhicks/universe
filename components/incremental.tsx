@@ -51,6 +51,7 @@ export default function Incremental(props: IncrementalProps) {
           aria-label={label}
           value={progress}
           isStriped
+          disableAnimation
         />
       </div>
       <div className="flex justify-between items-center">
