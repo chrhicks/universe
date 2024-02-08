@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction } from 'react'
 
 export type IncrementalTypes = 'upQuark' | 'downQuark' | 'proton' | 'neutron' | 'electron'
 export type UpgradeId = 'sub-atomic-automation' | 'atomic-automation'
@@ -48,10 +48,10 @@ export interface ThingConfig {
 }
 
 export interface IncrementalConfig {
-  upQuark: ThingConfig,
-  downQuark: ThingConfig,
-  proton: ThingConfig,
-  neutron: ThingConfig,
+  upQuark: ThingConfig
+  downQuark: ThingConfig
+  proton: ThingConfig
+  neutron: ThingConfig
   electron: ThingConfig
 }
 
@@ -61,8 +61,9 @@ export interface DarkEnergyConfig {
 
 export interface ExperienceConfig {
   initialRequirement: number
-  fn: 'linear' | 'exponential' | 'variable',
-  growthFactor: number
+  growthType: 'exponential' | 'logarithmic'
+  expGrowthFactor: number
+  logGrowthFactor: number
 }
 
 export interface UpgradeConfig {

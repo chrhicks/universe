@@ -1,15 +1,15 @@
-import { Configuration, IncrementalConfig, UpgradesConfig } from "./types"
+import { Configuration, IncrementalConfig, UpgradesConfig } from './types'
 
 const things: IncrementalConfig = {
   upQuark: {
     rate: 10,
     progress: 0,
-    xpAmount: 50
+    xpAmount: 75
   },
   downQuark: {
     rate: 10,
     progress: 0,
-    xpAmount: 50
+    xpAmount: 75
   },
   proton: {
     rate: 5,
@@ -24,7 +24,7 @@ const things: IncrementalConfig = {
   electron: {
     rate: 15,
     progress: 0,
-    xpAmount: 25
+    xpAmount: 75
   }
 }
 
@@ -44,12 +44,13 @@ const upgrades: UpgradesConfig = {
 
 export const configuration: Configuration = {
   darkEnergy: {
-    maxAmount: 28123,
+    maxAmount: 850000
   },
   experience: {
     initialRequirement: 250,
-    fn: 'exponential',
-    growthFactor: 1.5
+    growthType: 'logarithmic',
+    expGrowthFactor: 1.5,
+    logGrowthFactor: 0.05
   },
   upgrades,
   things

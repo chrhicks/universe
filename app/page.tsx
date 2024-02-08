@@ -1,7 +1,7 @@
-import DarkEnergy from "@/components/DarkEnergy";
-import Experience from "@/components/Experience";
-import ThingsProgress from "@/components/ThingsProgress";
-import Upgrades from "@/components/Upgrades";
+import DarkEnergy from '@/components/DarkEnergy'
+import Experience from '@/components/Experience'
+import ThingsProgress from '@/components/ThingsProgress'
+import Upgrades from '@/components/Upgrades'
 
 export default function Home() {
   return (
@@ -22,5 +22,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useUniverseStateCtx } from "@/lib/providers/UniverseStateProvider"
+import { useUniverseStateCtx } from '@/lib/providers/UniverseStateProvider'
 
 export default function UniverseThings() {
   const { universeState: { things: {

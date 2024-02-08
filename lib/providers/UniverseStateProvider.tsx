@@ -1,9 +1,9 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import UniverseStateHelper from "../UniverseStateHelper";
-import { configuration } from "../config";
-import { StateWrapper, UniverseState } from "../types";
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import UniverseStateHelper from '../UniverseStateHelper'
+import { configuration } from '../config'
+import { StateWrapper, UniverseState } from '../types'
 
 const UniverseStateCtx = createContext<StateWrapper>(undefined!)
 
@@ -78,7 +78,7 @@ export function useUniverseStateCtx(): StateWrapper {
 
   if (!context) {
     throw new Error(
-      "useUniverseStateCtx should be used within the UniverseState provider!"
+      'useUniverseStateCtx should be used within the UniverseState provider!'
     )
   }
 

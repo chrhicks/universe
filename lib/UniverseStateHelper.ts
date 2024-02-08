@@ -1,6 +1,6 @@
-import { Dispatch, SetStateAction } from "react"
-import { configuration } from "./config"
-import { AppliedUpgrade, IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState, UpgradeId } from "./types"
+import { Dispatch, SetStateAction } from 'react'
+import { configuration } from './config'
+import { AppliedUpgrade, IncrementalTypes, StateWrapper, ThingConfig, ThingValue, UniverseState, UpgradeId } from './types'
 
 export default class UniverseStateHelper {
   universeState: UniverseState
@@ -77,7 +77,7 @@ export default class UniverseStateHelper {
       return {
         amount: isNewLevel ? 0 : nextAmount,
         nextLevel: isNewLevel
-          ? (nextAmount * Math.pow(configuration.experience.growthFactor, newNextLevel -1 ))
+          ? this.xpGrowthFn(nextAmount, newNextLevel)
           : nextLevel,
         level: newNextLevel
       }
@@ -94,7 +94,7 @@ export default class UniverseStateHelper {
       downQuark: increment(configuration.things.downQuark, this.universeState.things.downQuark),
       proton: increment(configuration.things.proton, this.universeState.things.proton),
       neutron: increment(configuration.things.neutron, this.universeState.things.neutron),
-      electron: increment(configuration.things.electron, this.universeState.things.electron),
+      electron: increment(configuration.things.electron, this.universeState.things.electron)
     }
 
     // 2.
@@ -108,6 +108,17 @@ export default class UniverseStateHelper {
     }
 
     return newState
+  }
+
+  xpGrowthFn(amount: number, level: number): number {
+    const { expGrowthFactor, logGrowthFactor, growthType } = configuration.experience
+    console.log(`growthType: ${growthType}`)
+    switch (growthType) {
+      case 'exponential':
+        return (amount * Math.pow(configuration.experience.expGrowthFactor, level -1 ))
+      default:
+        throw new Error(`Unhandled experience growthType [${growthType}]`)
+    }
   }
 
   incrementThing(type: IncrementalTypes, appliedUpgrades: AppliedUpgrade[]): ThingValue {
@@ -135,7 +146,8 @@ export default class UniverseStateHelper {
       amount: isNewLevel ? 0 : nextAmount,
       nextLevel: isNewLevel
         // ? (nextAmount * Math.pow(configuration.experience.growthFactor, newNextLevel -1 ))
-        ? ((nextAmount + 1) * Math.log(nextLevel))
+        // ? ((nextAmount + 1) * Math.log(nextLevel))
+        ? this.xpGrowthFn(nextAmount, newNextLevel)
         : nextLevel,
       level: newNextLevel
     }
@@ -143,9 +155,12 @@ export default class UniverseStateHelper {
 
   increment(type: IncrementalTypes): UniverseState {
     const { appliedUpgrades, experience } = this.universeState
+    const { xpAmount } = configuration.things[type]
     const newThingValue = this.incrementThing(type, appliedUpgrades)
-
-    const newExperience = experience.level > 0 && newThingValue.progress === 0 ? this.incrementXp(type) : experience
+    const newExperience =
+      experience.level > 0
+        && newThingValue.progress === 0
+        ? this.incrementXp(type) : experience
 
     return {
       ...this.universeState,
@@ -153,7 +168,8 @@ export default class UniverseStateHelper {
         ...this.universeState.things,
         [type]: newThingValue
       },
-      experience: newExperience
+      experience: newExperience,
+      darkEnergy: this.universeState.darkEnergy + xpAmount
     }
   }
 
@@ -171,7 +187,7 @@ export default class UniverseStateHelper {
 
     const newAppliedUpgrades = [...appliedUpgrades, { id }]
 
-    const ehh = {
+    return {
       ...this.universeState,
       experience: {
         ...this.universeState.experience,
@@ -179,7 +195,5 @@ export default class UniverseStateHelper {
       },
       appliedUpgrades: newAppliedUpgrades
     }
-
-    return ehh
   }
 }

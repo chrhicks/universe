@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { UniverseStateProvider } from "@/lib/providers/UniverseStateProvider";
-import { NextUIProvider } from "@nextui-org/react";
-import React from "react";
+import { UniverseStateProvider } from '@/lib/providers/UniverseStateProvider'
+import { NextUIProvider } from '@nextui-org/react'
+import React from 'react'
 
 export function Providers({children}: { children: React.ReactNode }) {
   return (

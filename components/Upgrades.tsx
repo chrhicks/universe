@@ -1,10 +1,10 @@
 'use client'
 
-import UniverseStateHelper from "@/lib/UniverseStateHelper";
-import { configuration } from "@/lib/config";
-import { useUniverseStateCtx } from "@/lib/providers/UniverseStateProvider";
-import { UpgradeConfig, UpgradeId } from "@/lib/types";
-import { ChevronDoubleUpIcon } from "@heroicons/react/24/outline";
+import UniverseStateHelper from '@/lib/UniverseStateHelper'
+import { configuration } from '@/lib/config'
+import { useUniverseStateCtx } from '@/lib/providers/UniverseStateProvider'
+import { UpgradeConfig, UpgradeId } from '@/lib/types'
+import { ChevronDoubleUpIcon } from '@heroicons/react/24/outline'
 
 function UpgradeTile({ config }: { config: UpgradeConfig }) {
   const stateWrapper = useUniverseStateCtx()
