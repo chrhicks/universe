@@ -18,13 +18,17 @@ export interface AppliedUpgrade {
   id: UpgradeId
 }
 
+export interface ExperienceState {
+  amount: number,
+  nextLevel: number
+  points: number
+  totalPoints: number
+  theNumber: number
+}
+
 export interface UniverseState {
   darkEnergy: number
-  experience: {
-    amount: number,
-    nextLevel: number
-    level: number
-  }
+  experience: ExperienceState
   appliedUpgrades: AppliedUpgrade[]
   things: {
     upQuark: ThingValue

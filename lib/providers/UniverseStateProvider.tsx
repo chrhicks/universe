@@ -12,9 +12,11 @@ const defaultUniverseState: UniverseState = {
   experience: {
     amount: 1,
     nextLevel: configuration.experience.initialRequirement,
-    level: 1
+    points: 0,
+    totalPoints: 0,
+    theNumber: 1
   },
-  appliedUpgrades: [{ id: 'sub-atomic-automation' }],
+  appliedUpgrades: [],
   things: {
     upQuark: {
       thingType: 'upQuark',

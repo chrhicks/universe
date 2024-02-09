@@ -4,27 +4,27 @@ const things: IncrementalConfig = {
   upQuark: {
     rate: 10,
     progress: 0,
-    xpAmount: 75
+    xpAmount: 5
   },
   downQuark: {
     rate: 10,
     progress: 0,
-    xpAmount: 75
-  },
-  proton: {
-    rate: 5,
-    progress: 0,
-    xpAmount: 125
-  },
-  neutron: {
-    rate: 5,
-    progress: 0,
-    xpAmount: 125
+    xpAmount: 5
   },
   electron: {
     rate: 15,
     progress: 0,
-    xpAmount: 75
+    xpAmount: 8
+  },
+  proton: {
+    rate: 5,
+    progress: 0,
+    xpAmount: 10
+  },
+  neutron: {
+    rate: 5,
+    progress: 0,
+    xpAmount: 10
   }
 }
 
@@ -45,10 +45,10 @@ const upgrades: UpgradesConfig = {
 export const configuration: Configuration = {
   tickSpeed: 250,
   darkEnergy: {
-    maxAmount: 850000
+    maxAmount: 85000000000
   },
   experience: {
-    initialRequirement: 250,
+    initialRequirement: 30,
     growthType: 'logarithmic',
     expGrowthFactor: 1.5,
     logGrowthFactor: 1

@@ -16,7 +16,7 @@ function UpgradeTile({ config }: { config: UpgradeConfig }) {
   }
 
   const isApplied = stateWrapper.universeState.appliedUpgrades.find(au => au.id === config.id)
-  const isDiabled = stateWrapper.universeState.experience.level < config.cost
+  const isDiabled = stateWrapper.universeState.experience.points < config.cost
   const disabledClass = isApplied || isDiabled ? 'bg-gray-600 text-slate-200 opacity-50' : ''
 
 
@@ -43,7 +43,7 @@ export default function Upgrades() {
   return (
     <div className="rounded-md bg-slate-800 p-2 space-y-4">
       <p>Upgrades</p>
-      <div>Points: {experience.level}</div>
+      <div>Points: {experience.points}</div>
       {items.map(upgrade =>
         <UpgradeTile config={upgrade} key={upgrade.id} />)
       }

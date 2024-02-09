@@ -33,11 +33,12 @@ export default function Incremental(props: IncrementalProps) {
       progress,
       pointsForNext,
       totalPerProgressComplete,
-      xpAmount
+      xpAmount,
+      automated
     }
   } = props
   const state = useUniverseStateCtx()
-  const { experience: { level } } = state.universeState
+  const { experience: { points } } = state.universeState
 
   function increment() {
     const helper = new UniverseStateHelper(state)
@@ -65,7 +66,10 @@ export default function Incremental(props: IncrementalProps) {
         />
       </div>
       <div className="flex space-x-2 items-center">
-        <button disabled={pointsForNext > level } className="bg-yellow-500 p-1 rounded flex justify-center items-center" onClick={upgradeThing}>
+        <button
+          disabled={pointsForNext > points }
+          className="bg-yellow-500 p-1 rounded flex justify-center items-center disabled:opacity-25"
+          onClick={upgradeThing}>
           <div className="px-1 text-tiny font-semibold flex items-center justify-center bg-yellow-700 rounded-lg">
             <div className="w-2 h-2 mr-2 bg-gray-400 rounded-full"></div>
             { pointsForNext }
@@ -82,7 +86,7 @@ export default function Incremental(props: IncrementalProps) {
             XP: {toFixedFloat(xpAmount)}
           </div>
         </div>
-        <button className="p-1 rounded bg-cyan-900">
+        <button className="p-1 rounded bg-cyan-900 disabled:opacity-25" disabled={automated}>
           <PlusIcon className="w-5 h-5 text-slate-900" onClick={increment}/>
         </button>
       </div>
