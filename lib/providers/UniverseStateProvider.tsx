@@ -16,7 +16,7 @@ const defaultUniverseState: UniverseState = {
     totalPoints: 0,
     theNumber: 1
   },
-  appliedUpgrades: [],
+  appliedUpgrades: [{ 'id': 'sub-atomic-automation'}],
   things: {
     upQuark: {
       thingType: 'upQuark',

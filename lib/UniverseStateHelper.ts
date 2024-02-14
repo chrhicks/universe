@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { configuration } from './config'
 import { ExperienceState, IncrementalTypes, StateWrapper, ThingValue, UniverseState, UpgradeId } from './types'
-import { toInt } from './utils'
+import { toFixedFloat, toInt } from './utils'
 
 export default class UniverseStateHelper {
   universeState: UniverseState
@@ -46,6 +46,7 @@ export default class UniverseStateHelper {
 
     const increment = (thingValue: ThingValue): ThingValue => {
       const { total, progress, rate, totalPerProgressComplete, xpAmount } = thingValue
+      const { theNumber } = this.universeState.experience
 
       const mods = upgradeModifications(thingValue)
 
@@ -57,13 +58,12 @@ export default class UniverseStateHelper {
       const newTotal = newProgress >= 100 ? total + toInt(totalPerProgressComplete) : total
 
       if (newProgress >= 100) {
-        xpIncrement += xpAmount
+        xpIncrement += xpAmount + theNumber
       }
 
       return {
         ...thingValue,
         progress: newProgress >= 100 ? 0 : newProgress,
-        xpAmount: newProgress >= 100 ? (xpAmount * 1.25) : xpAmount,
         total: newTotal,
         automated: mods.automated
       }
@@ -81,7 +81,7 @@ export default class UniverseStateHelper {
       const iisNewLevel = isNewLevel()
       const newPoints = iisNewLevel ? Math.max(points, -1) + 1 : points
       const newTheNumber = iisNewLevel ? theNumber + 1 : theNumber
-      const newAmount = iisNewLevel ? 0 : nextAmount + newTheNumber
+      const newAmount = iisNewLevel ? 0 : nextAmount
       const newTotalPoints = iisNewLevel ? totalPoints + 1 : totalPoints
       const newNextLevel = iisNewLevel
           ? this.xpGrowthFn(Math.max(newAmount, nextLevel), newTotalPoints + 1)
@@ -89,11 +89,11 @@ export default class UniverseStateHelper {
 
       return {
         ...this.universeState.experience,
-        amount: newAmount,
+        amount: toFixedFloat(newAmount),
         nextLevel: newNextLevel,
         points: newPoints,
         totalPoints: newTotalPoints,
-        theNumber: newTheNumber
+        theNumber: toFixedFloat(newTheNumber)
       }
     }
 
@@ -112,7 +112,8 @@ export default class UniverseStateHelper {
     }
 
     // 2.
-    const experience = isNewLevel() ? incrementXp() : this.universeState.experience
+    const newExperience = incrementXp()
+    const experience = newExperience
 
     const newState: UniverseState = {
       ...(universeState || this.universeState),
@@ -138,17 +139,15 @@ export default class UniverseStateHelper {
   }
 
   incrementThing(type: IncrementalTypes): ThingValue {
-    const config = configuration.things[type]
     const thingValue = this.universeState.things[type]
-    const { rate } = config
-    const { total, progress, xpAmount } = thingValue
+    const { rate } = thingValue
+    const { total, progress } = thingValue
     const newProgress = progress + rate
 
     return {
       ...thingValue,
       total: total + 1,
-      progress:  newProgress >= 100 ? 0 : newProgress,
-      xpAmount: newProgress >= 100 ? (xpAmount * 1.1) : xpAmount
+      progress:  newProgress >= 100 ? 0 : newProgress
     }
   }
 
@@ -179,21 +178,19 @@ export default class UniverseStateHelper {
 
   increment(type: IncrementalTypes): UniverseState {
     const { experience } = this.universeState
-    const { xpAmount } = configuration.things[type]
     const newThingValue = this.incrementThing(type)
-    const newExperience =
-      experience.points >= 0
-        && newThingValue.progress === 0
-        ? this.incrementXp(type) : experience
+    const { xpAmount } = newThingValue
+    const isLevelUp = experience.points >= 0 && newThingValue.progress === 0
+    const newExperience = isLevelUp ? this.incrementXp(type) : experience
 
-    return {
+        return {
       ...this.universeState,
       things: {
         ...this.universeState.things,
         [type]: newThingValue
       },
       experience: newExperience,
-      darkEnergy: this.universeState.darkEnergy + xpAmount
+      darkEnergy: isLevelUp ? this.universeState.darkEnergy + xpAmount : this.universeState.darkEnergy
     }
   }
 
@@ -234,7 +231,7 @@ export default class UniverseStateHelper {
           pointsForNext: pointsForNext + 1,
           rate: this.xpGrowthFn(rate, rate),
           totalPerProgressComplete: (totalPerProgressComplete * 1.1),
-          xpAmount: xpAmount * 1.1
+          xpAmount: xpAmount * 1.05
         }
       }
     }
